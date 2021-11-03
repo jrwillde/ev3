@@ -41,3 +41,50 @@ while (color_rgb(1) < 5 &&  color_rgb(2) < 10 && color_rgb(3) < 10)
     end 
 end 
 CloseKeyboard();
+
+
+/*Current Automation Test*/
+brick.ColorRGB(4);
+color_rgb = brick.ColorRGB(4);
+%Prints RGB colors
+fprintf("\tRed: %d\n", color_rgb(1));
+fprintf("\tGreen: %d\n", color_rgb(2));
+fprintf("\tBlue: %d\n", color_rgb(3));
+
+if (color_rgb(1) < 25 && color_rgb(2) < 15 && color_rgb(3) < 20) 
+     brick.MoveMotor('AB',-60); 
+     var1 = 1;
+     %Once navigation starts, it continues to check for RGB colors
+     while (var1 == 1)
+         color_rgb = brick.ColorRGB(4);
+         brick.UltrasonicDist(3);
+         %If wall is touched, turn right
+         if (brick.TouchPressed(1) == 1)
+            brick.MoveMotor('AB', 60);
+            pause(0.25);
+            brick.MoveMotor('B',36.625);
+            brick.MoveMotor('A',-36.625);
+            pause(2);
+            brick.MoveMotor('AB', -15);
+            pause(0.20);
+            if (brick.UltrasonicDist(3) > 50)
+                pause(0.75);
+                brick.MoveMotor('B',-38.6);
+                brick.MoveMotor('A',38.6);  
+                pause(1);
+                brick.MoveMotor('AB', -60);
+                pause(3);
+            end
+            brick.MoveMotor('AB',-60);
+         end
+         %If opening is found (left-side), turn
+         if (brick.UltrasonicDist(3) > 50)
+            pause(0.75);
+            brick.MoveMotor('B',-38.6);
+            brick.MoveMotor('A',38.6);  
+            pause(1);
+            brick.MoveMotor('AB', -60);
+            pause(1);
+         end
+     end
+end
